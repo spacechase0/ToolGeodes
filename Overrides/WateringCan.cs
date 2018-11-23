@@ -39,4 +39,16 @@ namespace ToolGeodes.Overrides
             }
         }
     }
+
+    public static class WateringCanRemoteUseHook
+    {
+        public static void Prefix(Hoe __instance, GameLocation location, ref int x, ref int y, int power, Farmer who)
+        {
+            if (who.HasAdornment(ToolType.WateringCan, Mod.Config.GEODE_REMOTE_USE) > 0)
+            {
+                x = (int)who.lastClick.X;
+                y = (int)who.lastClick.Y;
+            }
+        }
+    }
 }

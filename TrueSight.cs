@@ -159,100 +159,131 @@ namespace ToolGeodes
             return -1;
         }
 
-        // Note: 74 should have priority but doesn't right now
+        // Note: I can't get this to work for 74 (prismatic shards) correctly
+        // I commented out the part that makes it appear for now
         [System.Diagnostics.CodeAnalysis.SuppressMessage("SMAPI.CommonErrors", "AvoidNetField")]
         [System.Diagnostics.CodeAnalysis.SuppressMessage("SMAPI.CommonErrors", "AvoidImplicitNetFieldCast")]
         public static int breakStone(int indexOfStone, int x, int y, Farmer who, Random r, MineShaft ms)
         {
-            int howMuch = 0;
+            int ret = -1;
             int num1 = who.professions.Contains(18) ? 1 : 0;
             switch (indexOfStone)
             {
-                case 2: // diamond
-                    return 72;
-                case 4: // ruby
-                    return 64;
-                case 6: // jade
-                    return 70;
-                case 8: // amethyst
-                    return 66;
-                case 10: // topaz
-                    return 68;
-                case 12: // emerald
-                    return 60;
-                case 14: // aquamarine
-                    return 62;
-                case 75: // special geode stone not used in-game
-                    return 535;
-                case 76: // special geode stone not used in-game
-                    return 536;
-                case 77: // special geode stone not used in-game
-                    return 537;
-                case 290: // iron ore
-                    return 380;
+                case 2:
+                    ret = 72;
+                    break;
+                case 4:
+                    ret = 64;
+                    break;
+                case 6:
+                    ret = 70;
+                    break;
+                case 8:
+                    ret = 66;
+                    break;
+                case 10:
+                    ret = 68;
+                    break;
+                case 12:
+                    ret = 60;
+                    break;
+                case 14:
+                    ret = 62;
+                    break;
+                case 75:
+                    ret = 535;
+                    break;
+                case 76:
+                    ret = 536;
+                    break;
+                case 77:
+                    ret = 537;
+                    break;
+                case 290:
+                    ret = 380;
+                    r.NextDouble(); r.NextDouble();
+                    break;
                 case 668:
                 case 670:
+                    ret = 390;
+                    r.NextDouble(); r.NextDouble();
                     if (r.NextDouble() < 0.08)
                     {
-                        return 382;
+                        ret = 382;
+                        break;
                     }
-                    return 390;
-                case 751: // copper ore
-                    return 378;
-                case 764: // gold ore
-                    return 384;
-                case 765: // iridium ore
+                    break;
+                case 751:
+                    ret = 378;
+                    r.NextDouble(); r.NextDouble();
+                    break;
+                case 764:
+                    ret = 384;
+                    r.NextDouble(); r.NextDouble();
+                    break;
+                case 765:
+                    ret = 386; ;
+                    r.NextDouble(); r.NextDouble();
                     if (r.NextDouble() < 0.04)
-                        return 74;
-                    return 386;
+                        ;// ret = 74;
+                    break;
             }
             if (who.professions.Contains(19) && r.NextDouble() < 0.5)
             {
                 switch (indexOfStone)
                 {
                     case 2:
-                        return 72;
+                        ret = 72;
+                        break;
                     case 4:
-                        return 64;
+                        ret = 64;
+                        break;
                     case 6:
-                        return 70;
+                        ret = 70;
+                        break;
                     case 8:
-                        return 66;
+                        ret = 66;
+                        break;
                     case 10:
-                        return 68;
+                        ret = 68;
+                        break;
                     case 12:
-                        return 60;
+                        ret = 60;
+                        break;
                     case 14:
-                        return 62;
+                        ret = 62;
+                        break;
                 }
             }
             if (indexOfStone == 46)
             {
+                r.Next(1, 4);
+                r.Next(1, 5);
                 if (r.NextDouble() < 0.25)
-                    return 74;
+                    ;// ret = 74;
             }
-
-            if (((bool)((NetFieldBase<bool, NetBool>)ms.isOutdoors) || (bool)((NetFieldBase<bool, NetBool>)ms.treatAsOutdoors)) && howMuch == 0)
+            if (((bool)((NetFieldBase<bool, NetBool>)ms.isOutdoors) || (bool)((NetFieldBase<bool, NetBool>)ms.treatAsOutdoors)) && ret == -1)
             {
                 double num2 = Game1.dailyLuck / 2.0 + (double)who.MiningLevel * 0.005 + (double)who.LuckLevel * 0.001;
                 Random random = new Random(x * 1000 + y + (int)Game1.stats.DaysPlayed + (int)Game1.uniqueIDForThisGame / 2);
+
                 if (who.professions.Contains(21) && random.NextDouble() < 0.05 * (1.0 + num2))
-                    return 382;
+                    ret = 382;
                 if (random.NextDouble() < 0.05 * (1.0 + num2))
                 {
                     random.Next(1, 3);
                     random.NextDouble();
                     double num3 = 0.1 * (1.0 + num2);
-                    return 382;
+                    ret = 382;
                 }
             }
             if (who.hasMagnifyingGlass && r.NextDouble() < 0.01)
             {
-                StardewValley.Object unseenSecretNote = ms.tryToCreateUnseenSecretNote(who);
+                var unseenSecretNote = ms.tryToCreateUnseenSecretNote(who);
                 if (unseenSecretNote != null)
-                    return 79;
+                    ret = unseenSecretNote.ParentSheetIndex;
             }
-            return -1;
+            return ret;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("SMAPI.CommonErrors", "AvoidNetField")]

@@ -52,8 +52,13 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Mod.cs" />
     <Compile Include="Log.cs" />
+    <Compile Include="Overrides\Game1.cs" />
     <Compile Include="Overrides\Hoe.cs" />
     <Compile Include="Overrides\GameLocation.cs" />
+    <Compile Include="Overrides\Bug.cs" />
+    <Compile Include="Overrides\MeleeWeapon.cs" />
+    <Compile Include="Overrides\Mummy.cs" />
+    <Compile Include="Overrides\RockCrab.cs" />
     <Compile Include="Overrides\Tool.cs" />
     <Compile Include="Overrides\WateringCan.cs" />
     <Compile Include="Overrides\Axe.cs" />

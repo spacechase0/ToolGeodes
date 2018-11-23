@@ -45,6 +45,16 @@ namespace ToolGeodes
                 doPrefix(typeof(Hoe), "DoFunction", typeof(HoeStaminaHook));
                 doPrefix(typeof(Tool), "tilesAffected", typeof(ToolTilesHook));
                 doPrefix(typeof(GameLocation).GetMethod("damageMonster", new Type[]{typeof(Rectangle), typeof(int), typeof(int), typeof(bool), typeof(float), typeof(int), typeof(float), typeof(float), typeof(bool), typeof(Farmer)}), typeof(MonsterDamageHook).GetMethod("Prefix"));
+                doPrefix(typeof(RockCrab).GetMethod("takeDamage", new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(RockCrabPiercingHook).GetMethod("Prefix"));
+                doPrefix(typeof(Bug).GetMethod("takeDamage", new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(BugPiercingHook).GetMethod("Prefix"));
+                doPrefix(typeof(Mummy).GetMethod("takeDamage", new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(MummyPiercingHook).GetMethod("Prefix"));
+                doPrefix(typeof(MeleeWeapon), "setFarmerAnimating", typeof(MeleeWeaponSpeedHook));
+                doPostfix(typeof(MeleeWeapon), "setFarmerAnimating", typeof(MeleeWeaponSpeedHook));
+                doTranspiler(typeof(Game1), "pressUseToolButton", typeof(Game1ToolRangeHook));
+                doPrefix(typeof(Pickaxe), "DoFunction", typeof(PickaxeRemoteUseHook));
+                doPrefix(typeof(Axe), "DoFunction", typeof(AxeRemoteUseHook));
+                doPrefix(typeof(WateringCan), "DoFunction", typeof(WateringCanRemoteUseHook));
+                doPrefix(typeof(Hoe), "DoFunction", typeof(HoeRemoteUseHook));
             }
             catch ( Exception e )
             {

@@ -157,17 +157,25 @@ namespace ToolGeodes
             else if (obj.ParentSheetIndex == Mod.Config.GEODE_WIDTH)
                 str = "Adorning provides 2 tiles width to a fully charged use.";
             else if (obj.ParentSheetIndex == Mod.Config.GEODE_INFINITE_WATER)
-                str = "Adorning provides infinite water.";
+                str = "Adorning provides infinite water.\n(One time use.)";
             else if (obj.ParentSheetIndex == Mod.Config.GEODE_OBJ_TRUESIGHT)
-                str = "Adorning provides true-sight of " + (tool == ToolType.Pickaxe ? "rocks" : "dig-spots and soil") + ".";
+                str = "Adorning provides true-sight of " + (tool == ToolType.Pickaxe ? "rocks" : "dig-spots") + ".(One time use.)\n";
             else if (obj.ParentSheetIndex == Mod.Config.GEODE_LESS_STAMINA)
                 str = "Adorning provides less stamina usage.";
             else if (obj.ParentSheetIndex == Mod.Config.GEODE_INSTANT_CHARGE)
-                str = "Adorning provides instant charging time.";
+                str = "Adorning provides instant charging time.\n(One time use.)";
+            else if (obj.ParentSheetIndex == Mod.Config.GEODE_REMOTE_USE)
+                str = "Adorning provides remote tool usage ability.\n(One time use.)";
             //else if (obj.ParentSheetIndex == Mod.Config.GEODE_MOB_FREEZE)
             //    str = "Adorning provides a freezing strike.";
             else if (obj.ParentSheetIndex == Mod.Config.GEODE_MORE_DAMAGE)
-                str = "Adorning provides more ferocious strike.";
+                str = "Adorning provides a more ferocious strike.";
+            else if (obj.ParentSheetIndex == Mod.Config.GEODE_MORE_DAMAGE)
+                str = "Adorning provides a \"bouncier\" strike.";
+            else if (obj.ParentSheetIndex == Mod.Config.GEODE_SWIPE_SPEED)
+                str = "Adorning provides a faster strike.\n(One time use.)";
+            else if (obj.ParentSheetIndex == Mod.Config.GEODE_PIERCE_ARMOR)
+                str = "Adorning provides a strike that pierces through the hardest armor.\n(One time use.)";
 
             return str == null ? i.getDescription() : (str + "\n\n" + i.getDescription());
         }
@@ -177,7 +185,7 @@ namespace ToolGeodes
             var obj = i as StardewValley.Object;
             if (obj == null || obj.bigCraftable.Value)
                 return false;
-
+            
             IList<int> indices = new List<int>();
             indices.Add(Mod.Config.GEODE_MORE_SLOTS);
             if ( tool != ToolType.Weapon )
@@ -186,6 +194,7 @@ namespace ToolGeodes
                 indices.Add(Mod.Config.GEODE_WIDTH);
                 indices.Add(Mod.Config.GEODE_LESS_STAMINA);
                 indices.Add(Mod.Config.GEODE_INSTANT_CHARGE);
+                indices.Add(Mod.Config.GEODE_REMOTE_USE);
 
                 if ( tool == ToolType.Pickaxe || tool == ToolType.Hoe )
                     indices.Add(Mod.Config.GEODE_OBJ_TRUESIGHT);
@@ -198,6 +207,9 @@ namespace ToolGeodes
             {
                 //indices.Add(Mod.Config.GEODE_MOB_FREEZE);
                 indices.Add(Mod.Config.GEODE_MORE_DAMAGE);
+                indices.Add(Mod.Config.GEODE_MORE_KNOCKBACK);
+                indices.Add(Mod.Config.GEODE_SWIPE_SPEED);
+                indices.Add(Mod.Config.GEODE_PIERCE_ARMOR);
             }
 
             bool found = false;
