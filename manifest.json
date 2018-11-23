@@ -6,7 +6,7 @@
   "UniqueID": "spacechase0.ToolGeodes",
   "PerSaveConfigs": false,
   "EntryDll": "ToolGeodes.dll",
-  "UpdateKeys": [ "Nexus:", "Chucklefish:" ],
+  "UpdateKeys": [ "Nexus:3090", "Chucklefish:5606" ],
   "Dependencies": [
     {
       "UniqueID": "stokastic.PrismaticTools",
