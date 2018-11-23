@@ -14,7 +14,6 @@ namespace ToolGeodes
 
         // Universal
         public int GEODE_MORE_SLOTS = SObject.prismaticShardIndex;
-        //578; // Star shards - what to do with these?
 
         // Tools
         public int GEODE_LENGTH = 564; // Opal
