@@ -170,7 +170,7 @@ namespace ToolGeodes
             //    str = "Adorning provides a freezing strike.";
             else if (obj.ParentSheetIndex == Mod.Config.GEODE_MORE_DAMAGE)
                 str = "Adorning provides a more ferocious strike.";
-            else if (obj.ParentSheetIndex == Mod.Config.GEODE_MORE_DAMAGE)
+            else if (obj.ParentSheetIndex == Mod.Config.GEODE_MORE_KNOCKBACK)
                 str = "Adorning provides a \"bouncier\" strike.";
             else if (obj.ParentSheetIndex == Mod.Config.GEODE_MORE_CRITCHANCE)
                 str = "Adorning provides a better chance of critically striking.";
