@@ -192,8 +192,6 @@ namespace ToolGeodes
             indices.Add(Mod.Config.GEODE_MORE_SLOTS);
             if ( tool != ToolType.Weapon )
             {
-                indices.Add(Mod.Config.GEODE_LENGTH);
-                indices.Add(Mod.Config.GEODE_WIDTH);
                 indices.Add(Mod.Config.GEODE_LESS_STAMINA);
                 indices.Add(Mod.Config.GEODE_INSTANT_CHARGE);
                 indices.Add(Mod.Config.GEODE_REMOTE_USE);
@@ -201,7 +199,11 @@ namespace ToolGeodes
                 if ( tool == ToolType.Pickaxe || tool == ToolType.Hoe )
                     indices.Add(Mod.Config.GEODE_OBJ_TRUESIGHT);
                 if (tool == ToolType.WateringCan || tool == ToolType.Hoe)
+                {
+                    indices.Add(Mod.Config.GEODE_LENGTH);
+                    indices.Add(Mod.Config.GEODE_WIDTH);
                     indices.Add(Mod.Config.GEODE_INSTANT_CHARGE);
+                }
                 if (tool == ToolType.WateringCan)
                     indices.Add(Mod.Config.GEODE_INFINITE_WATER);
             }
