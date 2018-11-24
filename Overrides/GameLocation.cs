@@ -16,7 +16,7 @@ namespace ToolGeodes.Overrides
             minDamage = (int)(minDamage * mult);
             maxDamage = (int)(maxDamage * mult);
 
-            mult = 1.0 * who.HasAdornment(ToolType.Weapon, Mod.Config.GEODE_MORE_KNOCKBACK) * 0.50;
+            mult = 1.0 + who.HasAdornment(ToolType.Weapon, Mod.Config.GEODE_MORE_KNOCKBACK) * 0.50;
             knockBackModifier = (float)(knockBackModifier * mult);
 
             return true;
