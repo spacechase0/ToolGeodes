@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using StardewValley;
 using StardewValley.Menus;
 using System.Collections.Generic;
+using StardewModdingAPI;
 using SObject = StardewValley.Object;
 
 namespace ToolGeodes
@@ -133,8 +134,8 @@ namespace ToolGeodes
                 }
             }
 
-            if (Game1.IsMasterGame)
-                Mod.instance.Helper.Data.WriteSaveData("spacechase0.ToolGeodes." + Game1.player.UniqueMultiplayerID, Mod.Data);
+            if (Context.IsMainPlayer)
+                Mod.instance.Helper.Data.WriteSaveData($"spacechase0.ToolGeodes.{Game1.player.UniqueMultiplayerID}", Mod.Data);
             else
             {
                 Log.debug("Sending tool geode data to host");

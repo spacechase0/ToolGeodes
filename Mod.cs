@@ -20,17 +20,19 @@ namespace ToolGeodes
 
         public const string MSG_TOOLGEODEDATA = "ToolGeodeData";
 
+        /// <summary>The mod entry point, called after the mod is first loaded.</summary>
+        /// <param name="helper">Provides simplified APIs for writing mods.</param>
         public override void Entry(IModHelper helper)
         {
             instance = this;
             Config = helper.ReadConfig<Configuration>() ?? new Configuration();
 
-            GameEvents.UpdateTick += onUpdate;
-            Helper.Events.Display.RenderedWorld += TrueSight.onDrawWorld;
-            InputEvents.ButtonPressed += onButtonPressed;
-            SaveEvents.AfterLoad += afterLoad;
-            Helper.Events.Multiplayer.PeerContextReceived += onClientReceived;
-            Helper.Events.Multiplayer.ModMessageReceived += msgReceived;
+            helper.Events.GameLoop.UpdateTicked += onUpdateTicked;
+            helper.Events.Display.RenderedWorld += TrueSight.onDrawWorld;
+            helper.Events.Input.ButtonPressed += onButtonPressed;
+            helper.Events.GameLoop.SaveLoaded += onSaveLoaded;
+            Helper.Events.Multiplayer.PeerContextReceived += onPeerContextReceived;
+            Helper.Events.Multiplayer.ModMessageReceived += onModMessageReceived;
 
             try
             {
@@ -58,7 +60,10 @@ namespace ToolGeodes
             }
         }
 
-        private void onUpdate(object sender, EventArgs args)
+        /// <summary>Raised after the game state is updated (≈60 times per second).</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void onUpdateTicked(object sender, UpdateTickedEventArgs e)
         {
             if (!Context.IsWorldReady)
                 return;
@@ -76,9 +81,12 @@ namespace ToolGeodes
             }
         }
 
-        private void onButtonPressed(object sender, EventArgsInput args)
+        /// <summary>Raised after the player presses a button on the keyboard, controller, or mouse.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void onButtonPressed(object sender, ButtonPressedEventArgs e)
         {
-            if (args.Button == Config.AdornKey)
+            if (e.Button == Config.AdornKey)
             {
                 if ( Game1.activeClickableMenu == null && !Game1.eventUp )
                 {
@@ -88,31 +96,40 @@ namespace ToolGeodes
             }
         }
 
-        private void afterLoad(object sender, EventArgs args)
+        /// <summary>Raised after the player loads a save slot.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void onSaveLoaded(object sender, SaveLoadedEventArgs e)
         {
-            if (Game1.IsMasterGame)
+            if (Context.IsMainPlayer)
             {
                 Data = Helper.Data.ReadSaveData<SaveData>($"spacechase0.ToolGeodes.{Game1.player.UniqueMultiplayerID}") ?? new SaveData();
             }
 
         }
 
-        private void onClientReceived(object sender, PeerContextReceivedEventArgs args)
+        /// <summary>Raised after the mod context for a peer is received. This happens before the game approves the connection, so the player doesn't yet exist in the game. This is the earliest point where messages can be sent to the peer via SMAPI.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void onPeerContextReceived(object sender, PeerContextReceivedEventArgs e)
         {
-            Log.debug("Sending tool geode data to " + args.Peer.PlayerID);
-            var data = Helper.Data.ReadSaveData<SaveData>($"spacechase0.ToolGeodes.{args.Peer.PlayerID}") ?? new SaveData();
+            Log.debug($"Sending tool geode data to {e.Peer.PlayerID}");
+            var data = Helper.Data.ReadSaveData<SaveData>($"spacechase0.ToolGeodes.{e.Peer.PlayerID}") ?? new SaveData();
             Helper.Multiplayer.SendMessage(data, MSG_TOOLGEODEDATA);
         }
 
-        private void msgReceived(object sender, ModMessageReceivedEventArgs args)
+        /// <summary>Raised after a mod message is received over the network.</summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void onModMessageReceived(object sender, ModMessageReceivedEventArgs e)
         {
-            if (args.FromModID == ModManifest.UniqueID && args.Type == MSG_TOOLGEODEDATA)
+            if (e.FromModID == ModManifest.UniqueID && e.Type == MSG_TOOLGEODEDATA)
             {
-                Log.debug("Got tool geode data from " + args.FromPlayerID);
-                var data = args.ReadAs<SaveData>();
-                if (Game1.IsMasterGame)
+                Log.debug($"Got tool geode data from {e.FromPlayerID}");
+                var data = e.ReadAs<SaveData>();
+                if (Context.IsMainPlayer)
                 {
-                    Helper.Data.WriteSaveData<SaveData>($"spacechase0.ToolGeodes.{args.FromPlayerID}", data);
+                    Helper.Data.WriteSaveData<SaveData>($"spacechase0.ToolGeodes.{e.FromPlayerID}", data);
                 }
                 else
                     Data = data;
