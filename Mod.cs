@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Harmony;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
@@ -39,26 +35,26 @@ namespace ToolGeodes
             try
             {
                 harmony = HarmonyInstance.Create("spacechase0.ToolGeodes");
-                doPrefix(typeof(Pickaxe), "DoFunction", typeof(PickaxeStaminaHook));
-                doPrefix(typeof(Axe), "DoFunction", typeof(AxeStaminaHook));
-                doPrefix(typeof(WateringCan), "DoFunction", typeof(WateringCanStaminaHook));
-                doPrefix(typeof(Hoe), "DoFunction", typeof(HoeStaminaHook));
+                doPrefix(typeof(Pickaxe), nameof(Pickaxe.DoFunction), typeof(PickaxeStaminaHook));
+                doPrefix(typeof(Axe), nameof(Axe.DoFunction), typeof(AxeStaminaHook));
+                doPrefix(typeof(WateringCan), nameof(WateringCan.DoFunction), typeof(WateringCanStaminaHook));
+                doPrefix(typeof(Hoe), nameof(Hoe.DoFunction), typeof(HoeStaminaHook));
                 doPrefix(typeof(Tool), "tilesAffected", typeof(ToolTilesHook));
-                doPrefix(typeof(GameLocation).GetMethod("damageMonster", new Type[]{typeof(Rectangle), typeof(int), typeof(int), typeof(bool), typeof(float), typeof(int), typeof(float), typeof(float), typeof(bool), typeof(Farmer)}), typeof(MonsterDamageHook).GetMethod("Prefix"));
-                doPrefix(typeof(RockCrab).GetMethod("takeDamage", new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(RockCrabPiercingHook).GetMethod("Prefix"));
-                doPrefix(typeof(Bug).GetMethod("takeDamage", new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(BugPiercingHook).GetMethod("Prefix"));
-                doPrefix(typeof(Mummy).GetMethod("takeDamage", new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(MummyPiercingHook).GetMethod("Prefix"));
-                doPrefix(typeof(MeleeWeapon), "setFarmerAnimating", typeof(MeleeWeaponSpeedHook));
-                doPostfix(typeof(MeleeWeapon), "setFarmerAnimating", typeof(MeleeWeaponSpeedHook));
-                doTranspiler(typeof(Game1), "pressUseToolButton", typeof(Game1ToolRangeHook));
-                doPrefix(typeof(Pickaxe), "DoFunction", typeof(PickaxeRemoteUseHook));
-                doPrefix(typeof(Axe), "DoFunction", typeof(AxeRemoteUseHook));
-                doPrefix(typeof(WateringCan), "DoFunction", typeof(WateringCanRemoteUseHook));
-                doPrefix(typeof(Hoe), "DoFunction", typeof(HoeRemoteUseHook));
+                doPrefix(typeof(GameLocation).GetMethod( nameof(GameLocation.damageMonster), new Type[]{typeof(Rectangle), typeof(int), typeof(int), typeof(bool), typeof(float), typeof(int), typeof(float), typeof(float), typeof(bool), typeof(Farmer)}), typeof(MonsterDamageHook).GetMethod(nameof(MonsterDamageHook.Prefix)));
+                doPrefix(typeof(RockCrab).GetMethod(nameof(RockCrab.takeDamage), new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(RockCrabPiercingHook).GetMethod( nameof(RockCrabPiercingHook.Prefix)));
+                doPrefix(typeof(Bug).GetMethod(nameof(Bug.takeDamage), new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(BugPiercingHook).GetMethod(nameof(BugPiercingHook.Prefix)));
+                doPrefix(typeof(Mummy).GetMethod(nameof(Mummy.takeDamage), new Type[] { typeof(int), typeof(int), typeof(int), typeof(bool), typeof(double), typeof(Farmer) }), typeof(MummyPiercingHook).GetMethod(nameof(MummyPiercingHook.Prefix)));
+                doPrefix(typeof(MeleeWeapon), nameof(MeleeWeapon.setFarmerAnimating), typeof(MeleeWeaponSpeedHook));
+                doPostfix(typeof(MeleeWeapon), nameof(MeleeWeapon.setFarmerAnimating), typeof(MeleeWeaponSpeedHook));
+                doTranspiler(typeof(Game1), nameof(Game1.pressUseToolButton), typeof(Game1ToolRangeHook));
+                doPrefix(typeof(Pickaxe), nameof(Pickaxe.DoFunction), typeof(PickaxeRemoteUseHook));
+                doPrefix(typeof(Axe), nameof(Axe.DoFunction), typeof(AxeRemoteUseHook));
+                doPrefix(typeof(WateringCan), nameof(WateringCan.DoFunction), typeof(WateringCanRemoteUseHook));
+                doPrefix(typeof(Hoe), nameof(Hoe.DoFunction), typeof(HoeRemoteUseHook));
             }
-            catch ( Exception e )
+            catch ( Exception ex )
             {
-                Log.error("Exception doing harmony: " + e);
+                Log.error($"Exception doing harmony: {ex}");
             }
         }
 
@@ -96,7 +92,7 @@ namespace ToolGeodes
         {
             if (Game1.IsMasterGame)
             {
-                Data = Helper.Data.ReadSaveData<SaveData>("spacechase0.ToolGeodes." + Game1.player.UniqueMultiplayerID) ?? new SaveData();
+                Data = Helper.Data.ReadSaveData<SaveData>($"spacechase0.ToolGeodes.{Game1.player.UniqueMultiplayerID}") ?? new SaveData();
             }
 
         }
@@ -104,7 +100,7 @@ namespace ToolGeodes
         private void onClientReceived(object sender, PeerContextReceivedEventArgs args)
         {
             Log.debug("Sending tool geode data to " + args.Peer.PlayerID);
-            var data = Helper.Data.ReadSaveData<SaveData>("spacechase0.ToolGeodes." + args.Peer.PlayerID) ?? new SaveData();
+            var data = Helper.Data.ReadSaveData<SaveData>($"spacechase0.ToolGeodes.{args.Peer.PlayerID}") ?? new SaveData();
             Helper.Multiplayer.SendMessage(data, MSG_TOOLGEODEDATA);
         }
 
@@ -116,7 +112,7 @@ namespace ToolGeodes
                 var data = args.ReadAs<SaveData>();
                 if (Game1.IsMasterGame)
                 {
-                    Helper.Data.WriteSaveData<SaveData>("spacechase0.ToolGeodes." + args.FromPlayerID, data);
+                    Helper.Data.WriteSaveData<SaveData>($"spacechase0.ToolGeodes.{args.FromPlayerID}", data);
                 }
                 else
                     Data = data;
