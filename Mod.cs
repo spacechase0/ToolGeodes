@@ -112,7 +112,8 @@ namespace ToolGeodes
         /// <param name="e">The event arguments.</param>
         private void onPeerContextReceived(object sender, PeerContextReceivedEventArgs e)
         {
-            if (!Game1.IsMasterGame)
+            Log.debug("Received peer context: " + e.Peer.PlayerID + " " + Game1.IsMasterGame);
+            if (!Game1.IsServer)
                 return;
 
             Log.debug($"Sending tool geode data to {e.Peer.PlayerID}");
